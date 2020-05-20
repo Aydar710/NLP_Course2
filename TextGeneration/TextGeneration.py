@@ -32,7 +32,7 @@ trainX = []
 trainY = []
 for i in seq:
     trainX.append(i[:train_len])
-    trainY.append(i[-1])
+    trainY.append(i[train_len])
 
 # Build model
 model = Sequential([
