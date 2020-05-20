@@ -7,16 +7,18 @@ from keras_preprocessing.sequence import pad_sequences
 from keras_preprocessing.text import Tokenizer
 import numpy as np
 
-MAX_WORDS = 51541
+NUM_WORDS = 10000
+EPOCHS = 25
+model_filepath = "model_weights.hdf5"
+
 df = pandas.read_csv("reviews.csv", encoding="utf-8")
 reviews = df['text']
 
 # tokenizing
-tokenizer = Tokenizer(num_words=MAX_WORDS)
+tokenizer = Tokenizer(num_words=NUM_WORDS)
 tokenizer.fit_on_texts(reviews.values)
 sequences = tokenizer.texts_to_sequences(reviews.values)
 text = [item for sublist in sequences for item in sublist]
-vocab_size = len(tokenizer.word_index)
 
 sentence_len = 15
 pred_len = 5
@@ -34,28 +36,28 @@ for i in seq:
 
 # Build model
 model = Sequential([
-    Embedding(vocab_size + 1, 50, input_length=train_len),
+    Embedding(NUM_WORDS, 50, input_length=train_len),
     LSTM(100, return_sequences=True),
     LSTM(100),
     Dense(100, activation='relu'),
     Dropout(0.1),
-    Dense(vocab_size, activation='softmax')
+    Dense(NUM_WORDS - 1, activation='softmax')
 ])
 
 # Train model
 model.compile(optimizer='adam',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
-filepath = "model_weights.hdf5"
-checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
+
+checkpoint = ModelCheckpoint(model_filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
 callbacks_list = [checkpoint]
 
-# history = model.fit(np.asarray(trainX),
-#                     pd.get_dummies(np.asarray(trainY)),
-#                     epochs=25,
-#                     batch_size=32,
-#                     callbacks=callbacks_list,
-#                     verbose=1)
+history = model.fit(np.asarray(trainX),
+                    pd.get_dummies(np.asarray(trainY)),
+                    epochs=EPOCHS,
+                    batch_size=32,
+                    callbacks=callbacks_list,
+                    verbose=1)
 
 
 def gen(model, seq, max_len=5):
