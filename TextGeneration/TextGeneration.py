@@ -50,15 +50,15 @@ filepath = "model_weights.hdf5"
 checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
 callbacks_list = [checkpoint]
 
-history = model.fit(np.asarray(trainX),
-                    pd.get_dummies(np.asarray(trainY)),
-                    epochs=25,
-                    batch_size=32,
-                    callbacks=callbacks_list,
-                    verbose=1)
+# history = model.fit(np.asarray(trainX),
+#                     pd.get_dummies(np.asarray(trainY)),
+#                     epochs=25,
+#                     batch_size=32,
+#                     callbacks=callbacks_list,
+#                     verbose=1)
 
 
-def gen(model, seq, max_len=10):
+def gen(model, seq, max_len=5):
     tokenized_sent = tokenizer.texts_to_sequences([seq])
     max_len = max_len + len(tokenized_sent[0])
     while len(tokenized_sent[0]) < max_len:
