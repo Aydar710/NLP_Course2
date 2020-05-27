@@ -53,7 +53,7 @@ def backtrace(s1, s2, rows, key=hash):
             edits.append({'type': 'match', 'i': i, 'j': j})
         elif i != 0 and j != 0 and min_cost == rows[i - 1][j - 1]:
             i, j = i - 1, j - 1
-            edits.append({'type': 'substitution', 'i': i, 'j': j})
+            edits.append({'type': 'replacement', 'i': i, 'j': j})
         elif i != 0 and min_cost == rows[i - 1][j]:
             i, j = i - 1, j
             edits.append({'type': 'deletion', 'i': i, 'j': j})
