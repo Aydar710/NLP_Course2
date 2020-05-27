@@ -92,10 +92,6 @@ def generate_file_name(article):
     return article_name + ".json"
 
 
-string = "Клинико-генетические детерминанты генов ФНО-ос, ИЛ-1/3 и ИЛ-1Ра в инициации и разви"
-str2 = string.replace("/", "")
-print(str2)
-
 for category in ARTICLE_CATEGORIES:
     page = 1
     has_pages = True

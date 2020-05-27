@@ -20,7 +20,7 @@ def get_cost_matrix(s1, s2, key=hash):
         for j, c2 in enumerate(s2):
             insertions = previous_row[j + 1] + 1
             deletions = current_row[j] + 1
-            substitutions = previous_row[j] + (key(c1) != key(c2))
+            substitutions = previous_row[j]
             current_row.append(min(insertions, deletions, substitutions))
         previous_row = current_row
 
