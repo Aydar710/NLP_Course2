@@ -1,15 +1,14 @@
-# Calculates the levenshtein distance and the edits between two strings
 from numpy.core.tests.test_mem_overlap import xrange
 
 
-def calc_levenshtein_dist(s1, s2, key=hash):
-    rows = get_cost_matrix(s1, s2, key)
-    edits = backtrace(s1, s2, rows, key)
+def calc_levenshtein_dist(s1, s2):
+    rows = get_cost_matrix(s1, s2)
+    edits = backtrace(s1, s2, rows)
 
     return rows[-1][-1], edits
 
 
-def get_cost_matrix(s1, s2, key=hash):
+def get_cost_matrix(s1, s2):
     rows = []
 
     previous_row = xrange(len(s2) + 1)
@@ -20,7 +19,7 @@ def get_cost_matrix(s1, s2, key=hash):
         for j, c2 in enumerate(s2):
             insertions = previous_row[j + 1] + 1
             deletions = current_row[j] + 1
-            substitutions = previous_row[j]
+            substitutions = previous_row[j] + (c1 != c2)
             current_row.append(min(insertions, deletions, substitutions))
         previous_row = current_row
 
@@ -29,7 +28,7 @@ def get_cost_matrix(s1, s2, key=hash):
     return rows
 
 
-def backtrace(s1, s2, rows, key=hash):
+def backtrace(s1, s2, rows):
     i, j = len(s1), len(s2)
 
     edits = []
