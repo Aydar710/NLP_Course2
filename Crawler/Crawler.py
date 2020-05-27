@@ -87,11 +87,6 @@ def get_articles_should_for_parsing(html):
     return article_links, len(list) == 0
 
 
-def generate_file_name(article):
-    article_name = article.name.replace("/", "")
-    return article_name + ".json"
-
-
 for category in ARTICLE_CATEGORIES:
     page = 1
     has_pages = True
@@ -104,12 +99,11 @@ for category in ARTICLE_CATEGORIES:
                 article = parse_article(link)
                 print("Parsed: " + article.name)
 
-                filename = generate_file_name(article)
-                with open('articles/' + filename, 'w', encoding="utf-8") as f:
-                    json.dump(article, f, cls=ArticleEncoder, ensure_ascii=False)
+                article_json = json.dumps(article, cls=ArticleEncoder, ensure_ascii=False)
+                f = open('articles.txt', 'a', encoding='utf-8')
+                f.write(article_json + "\n")
+                f.close()
 
             page += 1
         else:
             has_pages = False
-
-
