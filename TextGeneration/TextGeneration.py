@@ -8,7 +8,7 @@ from keras_preprocessing.text import Tokenizer
 import numpy as np
 
 NUM_WORDS = 10000
-EPOCHS = 25
+EPOCHS = 5
 model_filepath = "model_weights.hdf5"
 
 df = pandas.read_csv("reviews.csv", encoding="utf-8")
@@ -21,7 +21,7 @@ sequences = tokenizer.texts_to_sequences(reviews.values)
 text = [item for sublist in sequences for item in sublist]
 
 sentence_len = 15
-pred_len = 5
+pred_len = 1
 train_len = sentence_len - pred_len
 seq = []
 for i in range(len(text) - sentence_len):
@@ -32,7 +32,7 @@ trainX = []
 trainY = []
 for i in seq:
     trainX.append(i[:train_len])
-    trainY.append(i[train_len])
+    trainY.append(i[-1])
 
 # Build model
 model = Sequential([
