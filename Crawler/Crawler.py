@@ -87,23 +87,33 @@ def get_articles_should_for_parsing(html):
     return article_links, len(list) == 0
 
 
-articles = []
+def generate_file_name(article):
+    article_name = article.name.replace("/", "")
+    return article_name + ".json"
+
+
+string = "Клинико-генетические детерминанты генов ФНО-ос, ИЛ-1/3 и ИЛ-1Ра в инициации и разви"
+str2 = string.replace("/", "")
+print(str2)
+
 for category in ARTICLE_CATEGORIES:
     page = 1
     has_pages = True
     while has_pages:
-        print('Parsing ' + ' page ' + str(page) )
+        print('Parsing ' + ' page ' + str(page))
         html = get_article_pages_html(category, page).text
         article_links, is_last_page = get_articles_should_for_parsing(html)
         if not is_last_page:
             for link in article_links:
                 article = parse_article(link)
-                articles.append(article)
                 print("Parsed: " + article.name)
 
-            if len(article_links) > 0:
-                with open('articles.json', 'w', encoding="utf-8") as f:
-                    json.dump(articles, f, cls=ArticleEncoder, ensure_ascii=False)
+                filename = generate_file_name(article)
+                with open('articles/' + filename, 'w', encoding="utf-8") as f:
+                    json.dump(article, f, cls=ArticleEncoder, ensure_ascii=False)
+
             page += 1
         else:
             has_pages = False
+
+
